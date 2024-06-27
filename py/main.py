@@ -3,8 +3,11 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import pickle
+
+
 df = pd.read_csv('weatherAUS.csv')
 x = df.iloc[:,[1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]].values
 Y = df.iloc[:,[-1]].values
@@ -36,7 +39,7 @@ sc = StandardScaler()
 x = sc.fit_transform(x)
 
 # splitting training and testing data 
-x_train, x_test, y_train ,y_test = train_test_split(x,y,test_size=0.2,random_state=0)
+x_train, x_test, y_train ,y_test = train_test_split(x,y,test_size=0.85,random_state=0)
 
 #training the model
 
@@ -45,6 +48,8 @@ rf.fit(x_train,y_train)
 res = rf.predict(x_test)
 print(accuracy_score(y_test,res))
 
-
+pick = open('RFCrainfallmodel.sav','wb')
+pickle.dump(rf,pick)
+pick.close()
 
 
