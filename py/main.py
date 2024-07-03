@@ -4,17 +4,18 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import pickle
 import zipfile
 
 
-df = pd.read_csv('weatherAUS.csv')
+df = pd.read_csv('datasets\weatherAUS.csv')
+#removed useless columns
 x = df.iloc[:,[1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]].values
 Y = df.iloc[:,[-1]].values
 y = Y.reshape(-1,1)
 
-
+#imputing the data
 imputer = SimpleImputer(missing_values=np.nan, strategy="most_frequent")
 x = imputer.fit_transform(x)
 y = imputer.fit_transform(y)
@@ -47,16 +48,14 @@ x_train, x_test, y_train ,y_test = train_test_split(x,y,test_size=0.85,random_st
 rf = RandomForestClassifier()
 rf.fit(x_train,y_train)
 res = rf.predict(x_test)
-print(accuracy_score(y_test,res))
+print(accuracy_score(y_test,res), recall_score(y_test,res), precision_score(y_test,res), f1_score(y_test,res))
 
+saving the model
 pick = open('RFCrainfallmodel.sav','wb')
 pickle.dump(rf,pick)
 pick.close()
 
-def compress_file(file_path):
-    with zipfile.ZipFile(file_path + '.zip', 'w') as zipf:
-        zipf.write(file_path, arcname='your_file.sav')
 
-compress_file('RFCrainfallmodel.sav')
+
 
 
