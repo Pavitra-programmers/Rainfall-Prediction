@@ -6,9 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import pickle
-import zipfile
 
 
+#reading the csv dataset
 df = pd.read_csv('datasets\weatherAUS.csv')
 #removed useless columns
 x = df.iloc[:,[1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]].values
@@ -50,7 +50,7 @@ rf.fit(x_train,y_train)
 res = rf.predict(x_test)
 print(accuracy_score(y_test,res), recall_score(y_test,res), precision_score(y_test,res), f1_score(y_test,res))
 
-saving the model
+# saving the model
 pick = open('RFCrainfallmodel.sav','wb')
 pickle.dump(rf,pick)
 pick.close()
